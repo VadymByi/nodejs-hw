@@ -1,13 +1,35 @@
 import express from 'express';
+import cors from 'cors';
+import pino from 'pino-http';
 import 'dotenv/config';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
 
-app.use((req, res, next) => {
-  console.log(`Request time:${new Date().toLocaleString()} `);
-  next();
-});
+app.use(
+  pino({
+    level: 'info',
+    transport: {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'HH:MM:ss',
+        ignore: 'pid,hostname',
+        messageFormat:
+          '{req.method} {req.url} {res.statusCode} - {responseTime}ms',
+        hideObject: true,
+      },
+    },
+  }),
+);
+
+// app.use((req, res, next) => {
+//   console.log(`Request time:${new Date().toLocaleString()} `);
+//   next();
+// });
+
+app.use(express.json());
+app.use(cors());
 
 app.get('/notes', (req, res) => {
   res.status(200).json({ message: 'Retrieved all notes' });
@@ -25,17 +47,16 @@ app.get('/test-error', () => {
 });
 
 app.use((req, res) => {
-  console.log();
+  // console.log();
   res.status(404).json({
     message: 'Route not found',
   });
 });
 
 app.use((err, req, res, next) => {
-  console.error(`Error: ${err.message}`);
+  // console.error(`Error: ${err.message}`);
   res.status(500).json({
-    message: 'Internal server error',
-    error: err.message,
+    message: err.message,
   });
 });
 
