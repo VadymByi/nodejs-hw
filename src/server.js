@@ -23,11 +23,6 @@ app.use(
   }),
 );
 
-// app.use((req, res, next) => {
-//   console.log(`Request time:${new Date().toLocaleString()} `);
-//   next();
-// });
-
 app.use(express.json());
 app.use(cors());
 
@@ -47,14 +42,12 @@ app.get('/test-error', () => {
 });
 
 app.use((req, res) => {
-  // console.log();
   res.status(404).json({
     message: 'Route not found',
   });
 });
 
 app.use((err, req, res, next) => {
-  // console.error(`Error: ${err.message}`);
   res.status(500).json({
     message: err.message,
   });
