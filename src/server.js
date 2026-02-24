@@ -6,6 +6,7 @@ import { Note } from './models/note';
 import { errorHandler } from './middleware/errorHandler';
 import { logger } from './middleware/logger';
 import { notFoundHandler } from './middleware/notFoundHandler';
+import notesRoutes from './routes/notesRoutes';
 
 const app = express();
 const PORT = process.env.PORT ?? 3000;
@@ -14,20 +15,22 @@ app.use(logger);
 app.use(express.json());
 app.use(cors());
 
-app.get('/notes', async (req, res) => {
-  const notes = await Note.find();
-  res.status(200).json(notes);
-});
+app.use(notesRoutes);
 
-app.get('/notes/:noteId', async (req, res) => {
-  const { noteId } = req.params;
-  const note = await Note.findById(noteId);
+// app.get('/notes', async (req, res) => {
+//   const notes = await Note.find();
+//   res.status(200).json(notes);
+// });
 
-  if (!note) {
-    return res.status(404).json({ message: 'Note not found' });
-  }
-  res.status(200).json(note);
-});
+// app.get('/notes/:noteId', async (req, res) => {
+//   const { noteId } = req.params;
+//   const note = await Note.findById(noteId);
+
+//   if (!note) {
+//     return res.status(404).json({ message: 'Note not found' });
+//   }
+//   res.status(200).json(note);
+// });
 
 app.get('/test-error', () => {
   throw new Error('Simulated server error');
