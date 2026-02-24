@@ -15,6 +15,17 @@ app.use(logger);
 app.use(express.json());
 app.use(cors());
 
+app.use(
+  express.json({
+    type: ['aplication/json', 'application/vnd.api+json'],
+  }),
+);
+app.use(
+  express.json({
+    limit: '100kb',
+  }),
+);
+
 app.use(notesRoutes);
 
 // app.get('/notes', async (req, res) => {
