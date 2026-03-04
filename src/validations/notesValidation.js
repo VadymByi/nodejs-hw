@@ -1,5 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-import { TAGS } from '../constants/tags';
+import { TAGS } from '../constants/tags.js';
 import { isValidObjectId } from 'mongoose';
 
 const objectIdValidator = (value, helpers) => {
@@ -32,8 +32,17 @@ export const getAllNotesSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(5).max(20).default(10),
-    tag: Joi.string().valid(...TAGS),
-    search: Joi.string().allow(''),
+    tag: Joi.string()
+      .valid(...TAGS)
+      .messages({
+        'string.base': 'Tag must be a string',
+        'any.only': `Tag must be one of: ${TAGS.join(', ')}`,
+      }),
+    search: Joi.string().trim().allow('').messages({
+      'string.base': 'Search query must be a string',
+    }),
+    sortBy: Joi.string().valid('_id', 'title', 'tag'),
+    sortOrder: Joi.string().valid('asc', 'desc').default('asc'),
   }),
 };
 
@@ -50,7 +59,7 @@ export const updateNoteSchema = {
   [Segments.BODY]: Joi.object({
     title: Joi.string().min(1).messages({
       'string.base': 'Title must be a string',
-      'string.min': 'Title should have at least 1 characters',
+      'string.min': 'Title should have at least 1 character',
     }),
     content: Joi.string().messages({
       'string.base': 'Content must be a string',
