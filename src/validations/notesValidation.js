@@ -16,12 +16,11 @@ export const bodySchema = Joi.object({
     'string.min': 'Title should have at least 1 character',
     'any.required': 'Title is required',
   }),
-  content: Joi.string().default('').messages({
+  content: Joi.string().allow('').messages({
     'string.base': 'Content must be a string',
   }),
   tag: Joi.string()
     .valid(...TAGS)
-    .default('Todo')
     .messages({
       'string.base': 'Tag must be a string',
       'any.only': `Tag must be one of: ${TAGS.join(', ')}`,

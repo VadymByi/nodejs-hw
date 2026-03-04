@@ -11,36 +11,39 @@ export const getAllNotes = async (req, res) => {
     sortOrder = 'asc',
   } = req.query;
   const skip = (page - 1) * perPage;
-  const notesQuery = {};
+  // const notesQuery = {};
 
-  if (search) notesQuery.$text = { $search: search };
-  if (tag) notesQuery.tag = tag;
-
-  const [totalNotes, notes] = await Promise.all([
-    Note.countDocuments(notesQuery),
-    Note.find(notesQuery)
-      .sort({
-        [sortBy]: sortOrder,
-      })
-      .skip(skip)
-      .limit(perPage),
-  ]);
-
-  //ниже вариант фильтраци по конспекту
-  // const notesQuery = Note.find();
-
-  // if (search) {
-  //   notesQuery.where({ $text: { $search: search } });
-  // }
-
-  // if (tag) {
-  //   notesQuery.where('tag').equals(tag);
-  // }
+  // if (search) notesQuery.$text = { $search: search };
+  // if (tag) notesQuery.tag = tag;
 
   // const [totalNotes, notes] = await Promise.all([
-  //   notesQuery.clone().countDocuments(),
-  //   notesQuery.skip(skip).limit(perPage),
+  //   Note.countDocuments(notesQuery),
+  //   Note.find(notesQuery)
+  //     .sort({
+  //       [sortBy]: sortOrder,
+  //     })
+  //     .skip(skip)
+  //     .limit(perPage),
   // ]);
+
+  //ниже вариант фильтраци по конспекту
+  const notesQuery = Note.find();
+
+  if (search) {
+    notesQuery.where({ $text: { $search: search } });
+  }
+
+  if (tag) {
+    notesQuery.where('tag').equals(tag);
+  }
+
+  const [totalNotes, notes] = await Promise.all([
+    notesQuery.clone().countDocuments(),
+    notesQuery
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder }),
+  ]);
 
   const totalPages = Math.ceil(totalNotes / perPage);
 
