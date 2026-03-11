@@ -11,22 +11,7 @@ export const getAllNotes = async (req, res) => {
     sortOrder = 'asc',
   } = req.query;
   const skip = (page - 1) * perPage;
-  // const notesQuery = {};
 
-  // if (search) notesQuery.$text = { $search: search };
-  // if (tag) notesQuery.tag = tag;
-
-  // const [totalNotes, notes] = await Promise.all([
-  //   Note.countDocuments(notesQuery),
-  //   Note.find(notesQuery)
-  //     .sort({
-  //       [sortBy]: sortOrder,
-  //     })
-  //     .skip(skip)
-  //     .limit(perPage),
-  // ]);
-
-  //ниже вариант фильтраци по конспекту
   const notesQuery = Note.find();
 
   if (search) {
@@ -67,7 +52,7 @@ export const getNoteById = async (req, res) => {
 };
 
 export const createNote = async (req, res) => {
-  const note = await Note.create(req.body);
+  const note = await Note.create({ ...req.body, userId: req.user._id });
   res.status(201).json(note);
 };
 
