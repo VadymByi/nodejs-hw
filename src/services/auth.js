@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { FIFTEEN_MINUTES, ONE_DAY } from './../constants/time';
+import { FIFTEEN_MINUTES, ONE_DAY } from './../constants/time.js';
 import { Session } from '../models/session.js';
 
 export const createSession = async (userId) => {
@@ -15,7 +15,7 @@ export const createSession = async (userId) => {
   });
 };
 
-export const setSessionCokies = (res, session) => {
+export const setSessionCookies = (res, session) => {
   res.cookie('accessToken', session.accessToken, {
     httpOnly: true,
     secure: true,
