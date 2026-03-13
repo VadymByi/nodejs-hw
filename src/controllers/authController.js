@@ -3,9 +3,9 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 import { createSession, setSessionCookies } from '../services/auth.js';
-import jwt from 'jwtwebtoken';
+import jwt from 'jsonwebtoken';
 import { sendEmail } from '../utils/sendMail.js';
-import handlebars from './../../node_modules/handlebars/lib/handlebars/compiler/parser';
+import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
@@ -101,7 +101,7 @@ export const requestResetEmail = async (req, res) => {
   if (!user) {
     return res
       .status(200)
-      .json({ message: 'If this email exists, a reset link has been sent' });
+      .json({ message: 'Password reset email sent successfully' });
   }
 
   const resetToken = jwt.sign(
@@ -133,7 +133,7 @@ export const requestResetEmail = async (req, res) => {
   }
 
   res.status(200).json({
-    message: 'If this email exists, a reset link has been sent',
+    message: 'Password reset email sent successfully',
   });
 };
 
