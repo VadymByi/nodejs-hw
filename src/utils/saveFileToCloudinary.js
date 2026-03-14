@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream';
 import { v2 as cloudinary } from 'cloudinary';
-
+console.log('ALL ENV KEYS:', Object.keys(process.env));
 console.log('DEBUG CLOUDINARY:', {
   name: process.env.CLOUDINARY_CLOUD_NAME,
   key: process.env.CLOUDINARY_API_KEY,
