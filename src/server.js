@@ -1,8 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-if (process.env.NODE_ENV !== 'production') {
-  import('dotenv/config');
-}
+import 'dotenv/config';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { logger } from './middleware/logger.js';
